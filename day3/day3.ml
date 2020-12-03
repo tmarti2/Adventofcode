@@ -1,8 +1,8 @@
 type slope = {right:int;down:int}
 
 let rec get_next_line input down =
-  let _line = input_line input in
-  if down > 1 then get_next_line input (down-1) else _line
+  let line = input_line input in
+  if down > 1 then get_next_line input (down-1) else line
 
 let rec read_line input f slope (offset,trees) =
   try

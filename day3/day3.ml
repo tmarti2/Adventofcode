@@ -13,7 +13,7 @@ let rec read_line input f slope (offset,trees) =
 
 let read_data f slope filepath =
   let input = open_in filepath in
-  ignore(get_next_line input (slope.down-1));
+  ignore(input_line input);
   let trees = read_line input f slope (0,0) in
   close_in input;
   trees

@@ -1,3 +1,7 @@
+let between min max s_value =
+  let value = int_of_string s_value in
+  value >= min && value <= max
+
 let is_field_valid_one field =
   try
     Scanf.sscanf field "%3s:%s" (fun key value ->
@@ -13,15 +17,9 @@ let is_field_valid_two field =
     let res =
       Scanf.sscanf field "%3s:%s" (fun key value ->
           match key with
-          | "byr" ->
-            let value = int_of_string value in
-            value >= 1920 && value <= 2002
-          | "iyr" ->
-            let value = int_of_string value in
-            value >= 2010 && value <= 2020
-          | "eyr" ->
-            let value = int_of_string value in
-            value >= 2020 && value <= 2030
+          | "byr" -> between 1920 2002 value
+          | "iyr" -> between 2010 2020 value
+          | "eyr" -> between 2020 2030 value
           | "hgt" ->
             let size,u = Scanf.sscanf value "%d%s" (fun s u -> s,u) in
             (u = "cm" && size >= 150 && size <= 193)
@@ -55,18 +53,14 @@ let fold f input =
   let rec fold_aux valid_fields valids =
     try
       let line = input_line input in
-      if line = "" then begin
+      if line = "" then
         if valid_fields = 7 then
           fold_aux 0 (valids+1)
         else
           fold_aux 0 valids
-      end
-      else begin
+      else
         fold_aux (valid_fields+parse_line f line) valids
-      end
-    with
-    | End_of_file ->
-      if valid_fields = 7 then valids+1 else valids
+    with End_of_file -> if valid_fields = 7 then valids+1 else valids
   in
   fold_aux 0 0
 

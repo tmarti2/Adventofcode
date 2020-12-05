@@ -1,22 +1,19 @@
 exception Found of int
 
-let explode s = List.init (String.length s) (String.get s)
-
-let mid lb ub = lb + (ub - lb) / 2
-
-let get_new_bound (lb,ub) c =
-  match c with
-  | 'F' | 'L' -> (lb, mid lb ub)
-  | 'B' | 'R' -> (mid lb (ub+1),ub)
-  | _ -> assert false
+let to_binary str =
+  let bin = String.map (fun c ->
+      match c with
+      | 'F' | 'L' -> '0'
+      | 'B' | 'R' -> '1'
+      | _ -> assert false) str
+  in
+  int_of_string @@ "0b"^bin
 
 let get_row_id row =
   Scanf.sscanf row "%7s%3s" ( fun row col ->
-      let f = fun acc c -> get_new_bound acc c in
-      let lbr,ubr = List.fold_left f (0,127) (explode row) in
-      let lbc,ubc = List.fold_left f (0,7) (explode col) in
-      if lbr!=ubr || lbc!=ubc then assert false;
-      (lbr*8+lbc)
+      let row = to_binary row in
+      let col = to_binary col in
+      row * 8 + col
     )
 
 let find_max_id input =

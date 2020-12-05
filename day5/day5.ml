@@ -56,9 +56,9 @@ let find_my_id input =
 
 let read_data f filepath =
   let input = open_in filepath in
-  let valids = f input in
+  let res = f input in
   close_in input;
-  valids
+  res
 
 let () =
   let max_id = read_data find_max_id "data" in

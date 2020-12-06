@@ -16,26 +16,16 @@ let get_row_id row =
       row * 8 + col
     )
 
-let find_max_id input =
-  let rec fold max =
-    try
-      let line = input_line input in
-      let id = get_row_id line in
-      if id > max then fold id else fold max
-    with
-    | End_of_file -> max
-  in
-  fold (-1)
+let rec parse input acc max=
+  try
+    let line = input_line input in
+    let id = get_row_id line in
+    if id > max then parse input (id::acc) id else parse input (id::acc) max
+  with
+  | End_of_file -> acc,max
 
-let find_my_id input =
-  let rec fold acc =
-    try
-      let line = input_line input in
-      fold (get_row_id line :: acc)
-    with
-    | End_of_file -> acc
-  in
-  let all_ids = fold [] in
+let compute input =
+  let all_ids, max = parse input [] (-1) in
   let sorted = List.sort compare all_ids in
   match sorted with
   | [] | [_] -> assert false
@@ -49,16 +39,15 @@ let find_my_id input =
             previous:=el
         ) tl;
       assert false;
-    with Found id -> id
+    with Found id -> id, max
 
 let read_data f filepath =
   let input = open_in filepath in
-  let res = f input in
+  let max_id,my_id = f input in
   close_in input;
-  res
+  max_id,my_id
 
 let () =
-  let max_id = read_data find_max_id "data" in
+  let max_id,my_id = read_data compute "data" in
   Printf.printf "Part one : %d\n" max_id;
-  let my_id = read_data find_my_id "data" in
   Printf.printf "Part two : %d\n" my_id

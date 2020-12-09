@@ -1,3 +1,6 @@
 *.cm*
 .vscode
 a.out
+_build
+.merlin
+dune-project

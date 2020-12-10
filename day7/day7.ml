@@ -68,7 +68,7 @@ let compute line =
 let rec count node =
   let succ_e = G.succ_e g node in
   List.fold_left (fun acc e ->
-      acc + (G.E.label e) + (G.E.label e) * (count (G.E.dst e))
+      acc + (G.E.label e) + (G.E.label e) * (memo (G.E.dst e))
     ) 0 succ_e
 and memo =
   let h = Hashtbl.create 17 in
